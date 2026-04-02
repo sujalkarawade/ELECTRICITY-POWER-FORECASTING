@@ -261,7 +261,7 @@ def get_sample_data():
     """Generate and return sample data for testing"""
     try:
         preprocessor = DataPreprocessor()
-        data = preprocessor.generate_sample_data(start_date='2023-01-01', end_date='2023-12-31')
+        data = preprocessor.generate_sample_data(start_date='2023-07-01', end_date='2023-12-31')
         
         # Save sample data
         sample_path = os.path.join(app.config['UPLOAD_FOLDER'], 'sample_data.csv')

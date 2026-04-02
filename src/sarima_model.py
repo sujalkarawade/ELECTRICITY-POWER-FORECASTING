@@ -128,13 +128,19 @@ class SARIMAForecaster:
         
         print(f"Fitting SARIMA{order}{seasonal_order} model...")
         
-        self.model = SARIMAX(train_data[column],
+        # Cap to last 90 days (2160 hourly rows) — enough for SARIMA, much faster
+        series = train_data[column]
+        if len(series) > 2160:
+            series = series.iloc[-2160:]
+
+        self.model = SARIMAX(series,
                             order=order,
                             seasonal_order=seasonal_order,
                             enforce_stationarity=False,
-                            enforce_invertibility=False)
+                            enforce_invertibility=False,
+                            simple_differencing=True)
         
-        self.fitted_model = self.model.fit(disp=False)
+        self.fitted_model = self.model.fit(disp=False, low_memory=True, maxiter=50)
         self.train_data = train_data
         
         print("Model fitted successfully!")

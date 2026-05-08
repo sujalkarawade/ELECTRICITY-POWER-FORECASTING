@@ -1,76 +1,126 @@
-# Electricity Power Forecasting
+# ElectroForecast — Electricity Consumption Forecasting
 
-A web application for electricity consumption forecasting using SARIMA models.
+A web application for forecasting electricity consumption using **SARIMA** (Seasonal AutoRegressive Integrated Moving Average) models. Built with Flask on the backend and a responsive dark-theme dashboard on the frontend.
+
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Flask](https://img.shields.io/badge/Flask-3.0.3-lightgrey)
+![statsmodels](https://img.shields.io/badge/statsmodels-0.14.2-orange)
+
+---
+
+## Features
+
+- **Load data** — use built-in sample data (2 years of synthetic daily consumption) or upload your own CSV
+- **SARIMA modelling** — configure all parameters (p, d, q, P, D, Q, s) manually or let the app auto-detect the best combination via AIC grid search
+- **Interactive chart** — historical data, fitted values, forecast line, and 95% confidence interval band (Chart.js)
+- **Forecast horizon** — slider from 1 to 365 days
+- **Statistics panel** — MAE, RMSE, AIC, and data point count
+- **Forecast table** — scrollable date / forecast / lower CI / upper CI breakdown
+- **CSV export** — download the forecast results with a single click
+
+---
 
 ## Project Structure
 
 ```
-├── app.py                  # Flask web server & API
-├── main.py                 # CLI pipeline (standalone)
+.
+├── app.py                  # Flask backend & SARIMA logic
 ├── requirements.txt        # Python dependencies
-├── package.json            # npm scripts (dev runner)
-├── src/
-│   ├── data_preprocessing.py
-│   ├── sarima_model.py
-│   └── visualization.py
-├── templates/
-│   └── index.html          # Web UI
-├── static/css/main.css
-├── uploads/                # Uploaded CSV files
-├── outputs/                # Generated plots & forecasts
-└── models/                 # Saved model files
+├── static/
+│   ├── css/
+│   │   └── style.css       # Dark theme stylesheet
+│   └── js/
+│       └── main.js         # Chart.js + UI interactions
+└── templates/
+    └── index.html          # Single-page dashboard
 ```
 
-## Setup
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.10 or higher
+- pip
+
+### Installation
 
 ```bash
+# 1. Clone the repository
+git clone <your-repo-url>
+cd <repo-folder>
+
+# 2. Create and activate a virtual environment (recommended)
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# macOS / Linux
+source venv/bin/activate
+
+# 3. Install dependencies
 pip install -r requirements.txt
-npm install
 ```
 
-## Running
+### Running the App
 
-**Web app:**
 ```bash
-npm run dev
-```
-Opens http://localhost:5000 automatically.
-
-**CLI pipeline:**
-```bash
-python main.py
+python app.py
 ```
 
-## Usage
+Then open [http://localhost:5000](http://localhost:5000) in your browser.
 
-The web app walks you through 4 steps:
-
-1. **Upload** — drop a CSV file with `datetime` and `consumption_mw` columns
-2. **Preview** — review data stats and sample rows
-3. **Train** — configure SARIMA(p,d,q)(P,D,Q,s) parameters and train
-4. **Results** — view performance metrics, plots, and generate future forecasts
-
-Don't have data? Use the "Download sample CSV" link on the upload page.
+---
 
 ## CSV Format
 
-| Column | Description |
-|---|---|
-| `datetime` | Timestamp (`YYYY-MM-DD HH:MM:SS`) |
-| `consumption_mw` | Electricity consumption in megawatts |
+Upload a CSV file with at least two columns:
+
+| date       | consumption |
+|------------|-------------|
+| 2023-01-01 | 245.3       |
+| 2023-01-02 | 238.7       |
+| ...        | ...         |
+
+- The date column can be named `date`, `time`, or `timestamp`
+- The value column can be named anything (first non-date column is used)
+- Data is automatically resampled to daily frequency and gaps are interpolated
+
+---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/upload` | Upload and process CSV |
-| `POST` | `/train_model` | Train SARIMA model |
-| `POST` | `/forecast` | Generate future forecast |
-| `GET` | `/download_forecast` | Download forecast CSV |
-| `GET` | `/sample_data` | Generate sample data |
-| `GET` | `/health` | Health check |
+| Method | Endpoint           | Description                              |
+|--------|--------------------|------------------------------------------|
+| GET    | `/`                | Serve the dashboard                      |
+| GET    | `/api/sample-data` | Load built-in synthetic dataset          |
+| POST   | `/api/upload`      | Upload a CSV file                        |
+| POST   | `/api/forecast`    | Fit SARIMA and return forecast           |
+| POST   | `/api/auto-params` | Grid-search best SARIMA params by AIC    |
 
-## Default SARIMA Parameters
+---
 
-- Order: `(1, 1, 1)`
-- Seasonal order: `(1, 1, 1, 24)` — 24-hour seasonality for hourly data
+## Dependencies
+
+| Package        | Version |
+|----------------|---------|
+| Flask          | 3.0.3   |
+| flask-cors     | 4.0.1   |
+| statsmodels    | 0.14.2  |
+| pandas         | 2.2.2   |
+| numpy          | 1.26.4  |
+| scikit-learn   | 1.5.0   |
+| scipy          | 1.13.1  |
+
+Frontend libraries are loaded via CDN (no install needed):
+- [Bootstrap 5.3](https://getbootstrap.com/)
+- [Bootstrap Icons 1.11](https://icons.getbootstrap.com/)
+- [Chart.js 4.4](https://www.chartjs.org/)
+
+---
+
+## License
+
+MIT

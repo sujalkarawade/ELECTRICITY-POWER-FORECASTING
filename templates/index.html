@@ -3,34 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Electricity Consumption Forecasting</title>
-
-  <!-- Bootstrap 5 -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-  <!-- Bootstrap Icons -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    rel="stylesheet"
-  />
-  <!-- Chart.js -->
+  <title>ElectroForecast — SARIMA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="/static/css/style.css"/>
 </head>
 <body>
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar navbar-dark px-4 py-3">
+<!-- ═══════════════════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════════════════════ -->
+<nav class="app-navbar">
   <div class="d-flex align-items-center gap-3">
-    <div class="navbar-icon">
-      <i class="bi bi-lightning-charge-fill"></i>
-    </div>
+    <div class="navbar-icon"><i class="bi bi-lightning-charge-fill"></i></div>
     <div>
-      <span class="navbar-brand mb-0 fw-bold fs-5">ElectroForecast</span>
-      <span class="badge badge-sarima ms-2">SARIMA</span>
+      <span class="fw-bold fs-5 text-white">ElectroForecast</span>
+      <span class="badge-sarima ms-2">SARIMA</span>
     </div>
   </div>
   <div class="d-flex align-items-center gap-3">
@@ -39,231 +28,395 @@
   </div>
 </nav>
 
-<!-- ===== MAIN LAYOUT ===== -->
-<div class="container-fluid px-4 py-4">
-  <div class="row g-4">
+<!-- ═══════════════════════════════════════════════════════════
+     STEP WIZARD BAR
+════════════════════════════════════════════════════════════ -->
+<div class="wizard-bar">
+  <div class="wizard-steps">
+    <button class="wizard-step active" data-page="page-data" id="step1">
+      <span class="step-num">1</span>
+      <span class="step-label">Data Source</span>
+    </button>
+    <div class="wizard-connector"></div>
+    <button class="wizard-step" data-page="page-configure" id="step2">
+      <span class="step-num">2</span>
+      <span class="step-label">Configure</span>
+    </button>
+    <div class="wizard-connector"></div>
+    <button class="wizard-step" data-page="page-results" id="step3">
+      <span class="step-num">3</span>
+      <span class="step-label">Results</span>
+    </button>
+  </div>
+</div>
 
-    <!-- ===== LEFT PANEL ===== -->
-    <div class="col-xl-3 col-lg-4">
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 1 — DATA SOURCE
+════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-data">
+  <div class="page-inner">
 
-      <!-- Data Source Card -->
-      <div class="card mb-4">
-        <div class="card-header">
-          <i class="bi bi-database-fill me-2 text-accent"></i>Data Source
-        </div>
-        <div class="card-body">
-          <!-- Sample data -->
-          <button class="btn btn-accent w-100 mb-3" id="btnSample">
+    <div class="page-hero">
+      <i class="bi bi-database-fill-up page-hero-icon"></i>
+      <h2 class="page-title">Load Your Data</h2>
+      <p class="page-subtitle">Start by loading sample data or uploading your own electricity consumption CSV file.</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+
+      <!-- Sample Data Card -->
+      <div class="col-lg-5">
+        <div class="option-card" id="sampleCard">
+          <div class="option-card-icon" style="background:rgba(78,154,241,.12);color:#4e9af1">
+            <i class="bi bi-stars"></i>
+          </div>
+          <h5 class="option-card-title">Use Sample Data</h5>
+          <p class="option-card-desc">Load 2 years of synthetic daily electricity consumption data with realistic seasonal patterns, trend, and noise.</p>
+          <ul class="option-card-meta">
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i>730 daily data points</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Yearly &amp; weekly seasonality</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Ready to forecast instantly</li>
+          </ul>
+          <button class="btn btn-accent w-100 mt-3" id="btnSample">
             <i class="bi bi-stars me-2"></i>Load Sample Data
           </button>
+        </div>
+      </div>
 
-          <!-- Divider -->
-          <div class="divider-text mb-3">or upload CSV</div>
-
-          <!-- Upload -->
-          <div class="upload-zone" id="uploadZone">
-            <i class="bi bi-cloud-upload fs-2 mb-2 text-muted"></i>
-            <p class="mb-1 small">Drag &amp; drop CSV here</p>
-            <p class="text-muted" style="font-size:.75rem">or click to browse</p>
-            <input type="file" id="fileInput" accept=".csv" class="d-none" />
+      <!-- Upload Card -->
+      <div class="col-lg-5">
+        <div class="option-card" id="uploadCard">
+          <div class="option-card-icon" style="background:rgba(249,115,22,.12);color:#f97316">
+            <i class="bi bi-cloud-upload-fill"></i>
           </div>
-
+          <h5 class="option-card-title">Upload CSV File</h5>
+          <p class="option-card-desc">Upload your own electricity consumption data. The file must contain a date column and a consumption/value column.</p>
+          <div class="upload-zone mt-3" id="uploadZone">
+            <i class="bi bi-cloud-upload fs-1 mb-2"></i>
+            <p class="mb-1">Drag &amp; drop your CSV here</p>
+            <p class="small text-muted">or click to browse files</p>
+            <input type="file" id="fileInput" accept=".csv" class="d-none"/>
+          </div>
           <div id="uploadFeedback" class="mt-2 small"></div>
-
-          <!-- CSV format hint -->
           <div class="hint-box mt-3">
             <i class="bi bi-info-circle me-1"></i>
-            CSV must have a <strong>date</strong> column and a
-            <strong>consumption</strong> (or value) column.
+            Required columns: <strong>date</strong> and <strong>consumption</strong> (or any value column)
           </div>
         </div>
       </div>
 
-      <!-- SARIMA Parameters Card -->
-      <div class="card mb-4">
-        <div class="card-header">
-          <i class="bi bi-sliders me-2 text-accent"></i>SARIMA Parameters
+    </div>
+
+    <!-- Data Preview (shown after load) -->
+    <div id="dataPreview" class="data-preview-section d-none">
+      <div class="preview-header">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        <span id="previewMsg">Data loaded successfully</span>
+      </div>
+      <div class="row g-3 mt-2">
+        <div class="col-sm-4">
+          <div class="preview-stat">
+            <div class="preview-stat-label">Data Points</div>
+            <div class="preview-stat-value" id="previewPoints">—</div>
+          </div>
         </div>
-        <div class="card-body">
-          <!-- Auto-detect -->
-          <button class="btn btn-outline-accent w-100 mb-3" id="btnAutoParams">
-            <i class="bi bi-magic me-2"></i>Auto-detect Parameters
+        <div class="col-sm-4">
+          <div class="preview-stat">
+            <div class="preview-stat-label">Start Date</div>
+            <div class="preview-stat-value" id="previewStart">—</div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="preview-stat">
+            <div class="preview-stat-label">End Date</div>
+            <div class="preview-stat-value" id="previewEnd">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 text-center">
+        <button class="btn btn-accent btn-lg px-5" id="btnGoToConfigure">
+          Continue to Configure <i class="bi bi-arrow-right ms-2"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 2 — CONFIGURE
+════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-configure">
+  <div class="page-inner">
+
+    <div class="page-hero">
+      <i class="bi bi-sliders page-hero-icon"></i>
+      <h2 class="page-title">Configure SARIMA Model</h2>
+      <p class="page-subtitle">Set the model parameters and forecast horizon, or let the app find the best parameters automatically.</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+
+      <!-- Auto-detect -->
+      <div class="col-lg-10">
+        <div class="config-card">
+          <div class="config-card-header">
+            <i class="bi bi-magic me-2 text-accent"></i>Auto-detect Parameters
+          </div>
+          <div class="config-card-body">
+            <p class="text-muted small mb-3">Run a grid search over common parameter combinations and automatically select the best SARIMA order by AIC score.</p>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <button class="btn btn-outline-accent" id="btnAutoParams">
+                <i class="bi bi-magic me-2"></i>Find Best Parameters
+              </button>
+              <span class="text-muted small" id="autoParamsResult"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Non-seasonal params -->
+      <div class="col-lg-5">
+        <div class="config-card h-100">
+          <div class="config-card-header">
+            <i class="bi bi-graph-up me-2 text-accent"></i>Non-Seasonal Order (p, d, q)
+          </div>
+          <div class="config-card-body">
+            <p class="text-muted small mb-4">Controls the autoregressive, differencing, and moving average components of the non-seasonal part.</p>
+            <div class="row g-3">
+              <div class="col-4">
+                <div class="param-group">
+                  <label class="param-group-label">p — AR order</label>
+                  <input type="number" class="form-control param-input" id="paramP" value="1" min="0" max="5"/>
+                  <span class="param-group-hint">Autoregressive</span>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="param-group">
+                  <label class="param-group-label">d — Differencing</label>
+                  <input type="number" class="form-control param-input" id="paramD" value="1" min="0" max="2"/>
+                  <span class="param-group-hint">Integration</span>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="param-group">
+                  <label class="param-group-label">q — MA order</label>
+                  <input type="number" class="form-control param-input" id="paramQ" value="1" min="0" max="5"/>
+                  <span class="param-group-hint">Moving Average</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seasonal params -->
+      <div class="col-lg-5">
+        <div class="config-card h-100">
+          <div class="config-card-header">
+            <i class="bi bi-arrow-repeat me-2 text-accent"></i>Seasonal Order (P, D, Q, s)
+          </div>
+          <div class="config-card-body">
+            <p class="text-muted small mb-4">Controls the seasonal components. Set <strong>s</strong> to the number of periods in one season (e.g. 7 for weekly, 12 for monthly).</p>
+            <div class="row g-3">
+              <div class="col-3">
+                <div class="param-group">
+                  <label class="param-group-label">P</label>
+                  <input type="number" class="form-control param-input" id="paramSP" value="1" min="0" max="3"/>
+                  <span class="param-group-hint">Seasonal AR</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="param-group">
+                  <label class="param-group-label">D</label>
+                  <input type="number" class="form-control param-input" id="paramSD" value="1" min="0" max="2"/>
+                  <span class="param-group-hint">Seasonal Diff</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="param-group">
+                  <label class="param-group-label">Q</label>
+                  <input type="number" class="form-control param-input" id="paramSQ" value="1" min="0" max="3"/>
+                  <span class="param-group-hint">Seasonal MA</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="param-group">
+                  <label class="param-group-label">s — Period</label>
+                  <input type="number" class="form-control param-input" id="paramS" value="7" min="2" max="365"/>
+                  <span class="param-group-hint">Season length</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forecast Horizon -->
+      <div class="col-lg-10">
+        <div class="config-card">
+          <div class="config-card-header">
+            <i class="bi bi-calendar-range me-2 text-accent"></i>Forecast Horizon
+          </div>
+          <div class="config-card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="text-muted small">How many days ahead to forecast</span>
+              <span class="horizon-badge" id="horizonLabel">30 days</span>
+            </div>
+            <input type="range" class="form-range" id="horizonSlider" min="1" max="365" value="30"/>
+            <div class="d-flex justify-content-between mt-1">
+              <span class="text-muted" style="font-size:.72rem">1 day</span>
+              <span class="text-muted" style="font-size:.72rem">365 days</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Run button -->
+      <div class="col-lg-10 text-center">
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+          <button class="btn btn-outline-secondary" id="btnBackToData">
+            <i class="bi bi-arrow-left me-2"></i>Back to Data
           </button>
-
-          <div class="row g-2">
-            <!-- Non-seasonal -->
-            <div class="col-12">
-              <p class="param-label mb-1">Non-seasonal (p, d, q)</p>
-            </div>
-            <div class="col-4">
-              <label class="form-label small">p</label>
-              <input type="number" class="form-control param-input" id="paramP" value="1" min="0" max="5" />
-            </div>
-            <div class="col-4">
-              <label class="form-label small">d</label>
-              <input type="number" class="form-control param-input" id="paramD" value="1" min="0" max="2" />
-            </div>
-            <div class="col-4">
-              <label class="form-label small">q</label>
-              <input type="number" class="form-control param-input" id="paramQ" value="1" min="0" max="5" />
-            </div>
-
-            <!-- Seasonal -->
-            <div class="col-12 mt-2">
-              <p class="param-label mb-1">Seasonal (P, D, Q, s)</p>
-            </div>
-            <div class="col-3">
-              <label class="form-label small">P</label>
-              <input type="number" class="form-control param-input" id="paramSP" value="1" min="0" max="3" />
-            </div>
-            <div class="col-3">
-              <label class="form-label small">D</label>
-              <input type="number" class="form-control param-input" id="paramSD" value="1" min="0" max="2" />
-            </div>
-            <div class="col-3">
-              <label class="form-label small">Q</label>
-              <input type="number" class="form-control param-input" id="paramSQ" value="1" min="0" max="3" />
-            </div>
-            <div class="col-3">
-              <label class="form-label small">s</label>
-              <input type="number" class="form-control param-input" id="paramS" value="7" min="2" max="365" />
-            </div>
-          </div>
-
-          <!-- Horizon -->
-          <div class="mt-3">
-            <label class="form-label small d-flex justify-content-between">
-              Forecast Horizon
-              <span class="text-accent fw-bold" id="horizonLabel">30 days</span>
-            </label>
-            <input
-              type="range"
-              class="form-range"
-              id="horizonSlider"
-              min="1"
-              max="365"
-              value="30"
-            />
-          </div>
-
-          <!-- Run forecast -->
-          <button class="btn btn-success w-100 mt-3" id="btnForecast">
+          <button class="btn btn-success btn-lg px-5" id="btnForecast">
             <i class="bi bi-graph-up-arrow me-2"></i>Run Forecast
           </button>
         </div>
       </div>
 
-      <!-- Download Card -->
-      <div class="card">
-        <div class="card-header">
-          <i class="bi bi-download me-2 text-accent"></i>Export
-        </div>
-        <div class="card-body">
-          <button class="btn btn-outline-secondary w-100" id="btnDownload" disabled>
-            <i class="bi bi-file-earmark-spreadsheet me-2"></i>Download Forecast CSV
-          </button>
-        </div>
-      </div>
+    </div>
+  </div>
+</div>
 
-    </div><!-- /left panel -->
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 3 — RESULTS
+════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-results">
+  <div class="page-inner">
 
-    <!-- ===== RIGHT PANEL ===== -->
-    <div class="col-xl-9 col-lg-8">
+    <div class="page-hero">
+      <i class="bi bi-graph-up-arrow page-hero-icon"></i>
+      <h2 class="page-title">Forecast Results</h2>
+      <p class="page-subtitle">SARIMA model fitted and forecast generated. Explore the chart, metrics, and download the results.</p>
+    </div>
 
-      <!-- Stats Row -->
-      <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-xl-3">
-          <div class="stat-card">
-            <div class="stat-icon"><i class="bi bi-rulers"></i></div>
-            <div>
-              <div class="stat-label">MAE</div>
-              <div class="stat-value" id="statMAE">—</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="stat-card">
-            <div class="stat-icon"><i class="bi bi-bullseye"></i></div>
-            <div>
-              <div class="stat-label">RMSE</div>
-              <div class="stat-value" id="statRMSE">—</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="stat-card">
-            <div class="stat-icon"><i class="bi bi-bar-chart-line"></i></div>
-            <div>
-              <div class="stat-label">AIC</div>
-              <div class="stat-value" id="statAIC">—</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="stat-card">
-            <div class="stat-icon"><i class="bi bi-calendar-range"></i></div>
-            <div>
-              <div class="stat-label">Data Points</div>
-              <div class="stat-value" id="statPoints">—</div>
-            </div>
+    <!-- Stats Row -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-rulers"></i></div>
+          <div>
+            <div class="stat-label">MAE</div>
+            <div class="stat-value" id="statMAE">—</div>
           </div>
         </div>
       </div>
-
-      <!-- Chart Card -->
-      <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <span>
-            <i class="bi bi-activity me-2 text-accent"></i>Electricity Consumption &amp; Forecast
-          </span>
-          <div class="chart-legend d-flex gap-3">
-            <span class="legend-item">
-              <span class="legend-dot" style="background:#4e9af1"></span>Historical
-            </span>
-            <span class="legend-item">
-              <span class="legend-dot" style="background:#f97316"></span>Forecast
-            </span>
-            <span class="legend-item">
-              <span class="legend-dot" style="background:rgba(249,115,22,.25);border:1px solid #f97316"></span>95% CI
-            </span>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-bullseye"></i></div>
+          <div>
+            <div class="stat-label">RMSE</div>
+            <div class="stat-value" id="statRMSE">—</div>
           </div>
-        </div>
-        <div class="card-body chart-container">
-          <div id="chartPlaceholder" class="chart-placeholder">
-            <i class="bi bi-graph-up fs-1 mb-3 text-muted"></i>
-            <p class="text-muted">Load data and run a forecast to see the chart</p>
-          </div>
-          <canvas id="forecastChart" style="display:none"></canvas>
         </div>
       </div>
-
-      <!-- Forecast Table Card -->
-      <div class="card" id="tableCard" style="display:none">
-        <div class="card-header">
-          <i class="bi bi-table me-2 text-accent"></i>Forecast Values
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-bar-chart-line"></i></div>
+          <div>
+            <div class="stat-label">AIC</div>
+            <div class="stat-value" id="statAIC">—</div>
+          </div>
         </div>
-        <div class="card-body p-0">
-          <div class="table-responsive" style="max-height:300px;overflow-y:auto">
-            <table class="table table-dark table-hover table-sm mb-0">
-              <thead class="sticky-top">
-                <tr>
-                  <th>Date</th>
-                  <th>Forecast (kWh)</th>
-                  <th>Lower 95%</th>
-                  <th>Upper 95%</th>
-                </tr>
-              </thead>
-              <tbody id="forecastTableBody"></tbody>
-            </table>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-calendar-range"></i></div>
+          <div>
+            <div class="stat-label">Data Points</div>
+            <div class="stat-value" id="statPoints">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="result-card mb-4">
+      <div class="result-card-header">
+        <span><i class="bi bi-activity me-2 text-accent"></i>Electricity Consumption &amp; Forecast</span>
+        <div class="chart-legend d-flex gap-3">
+          <span class="legend-item"><span class="legend-dot" style="background:#4e9af1"></span>Historical</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#f97316"></span>Forecast</span>
+          <span class="legend-item"><span class="legend-dot" style="background:rgba(249,115,22,.25);border:1px solid #f97316"></span>95% CI</span>
+        </div>
+      </div>
+      <div class="result-card-body chart-container">
+        <canvas id="forecastChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Forecast Table + Actions row -->
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="result-card">
+          <div class="result-card-header">
+            <i class="bi bi-table me-2 text-accent"></i>Forecast Values
+          </div>
+          <div class="result-card-body p-0">
+            <div class="table-responsive" style="max-height:320px;overflow-y:auto">
+              <table class="table table-dark table-hover table-sm mb-0">
+                <thead class="sticky-top">
+                  <tr>
+                    <th>Date</th>
+                    <th>Forecast (kWh)</th>
+                    <th>Lower 95%</th>
+                    <th>Upper 95%</th>
+                  </tr>
+                </thead>
+                <tbody id="forecastTableBody"></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
 
-    </div><!-- /right panel -->
-  </div><!-- /row -->
-</div><!-- /container -->
+      <div class="col-lg-4">
+        <!-- Model Summary -->
+        <div class="result-card mb-4">
+          <div class="result-card-header">
+            <i class="bi bi-info-circle me-2 text-accent"></i>Model Summary
+          </div>
+          <div class="result-card-body">
+            <div id="modelSummary" class="model-summary-list"></div>
+          </div>
+        </div>
 
-<!-- ===== TOAST ===== -->
+        <!-- Actions -->
+        <div class="result-card">
+          <div class="result-card-header">
+            <i class="bi bi-download me-2 text-accent"></i>Export &amp; Actions
+          </div>
+          <div class="result-card-body d-flex flex-column gap-2">
+            <button class="btn btn-accent w-100" id="btnDownload">
+              <i class="bi bi-file-earmark-spreadsheet me-2"></i>Download Forecast CSV
+            </button>
+            <button class="btn btn-outline-accent w-100" id="btnNewForecast">
+              <i class="bi bi-arrow-repeat me-2"></i>New Forecast
+            </button>
+            <button class="btn btn-outline-secondary w-100" id="btnChangeData">
+              <i class="bi bi-database me-2"></i>Change Data Source
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TOAST
+════════════════════════════════════════════════════════════ -->
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
   <div id="appToast" class="toast align-items-center border-0" role="alert">
     <div class="d-flex">
@@ -273,17 +426,18 @@
   </div>
 </div>
 
-<!-- ===== LOADING OVERLAY ===== -->
+<!-- ═══════════════════════════════════════════════════════════
+     LOADING OVERLAY
+════════════════════════════════════════════════════════════ -->
 <div id="loadingOverlay" class="loading-overlay d-none">
   <div class="text-center">
     <div class="spinner-border text-accent mb-3" style="width:3rem;height:3rem"></div>
-    <p class="text-light" id="loadingText">Processing…</p>
+    <p class="text-light fw-semibold" id="loadingText">Processing…</p>
+    <p class="text-muted small" id="loadingSubText"></p>
   </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Custom JS -->
 <script src="/static/js/main.js"></script>
 </body>
 </html>

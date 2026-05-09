@@ -113,7 +113,17 @@ def compute_metrics(series: pd.Series, fitted_values: pd.Series) -> dict:
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("page_data.html", active_page="data")
+
+
+@app.route("/configure")
+def configure():
+    return render_template("page_configure.html", active_page="configure")
+
+
+@app.route("/results")
+def results():
+    return render_template("page_results.html", active_page="results")
 
 
 @app.route("/api/sample-data", methods=["GET"])

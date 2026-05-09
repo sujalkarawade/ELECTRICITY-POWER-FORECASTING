@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="/static/css/page_data.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+
+  <div class="page-hero">
+    <i class="bi bi-database-fill-up page-hero-icon"></i>
+    <h2 class="page-title">Load Your Data</h2>
+    <p class="page-subtitle">Start by loading sample data or uploading your own electricity consumption CSV file.</p>
+  </div>
+
+  <div class="row g-4 justify-content-center">
+
+    <!-- Sample Data Card -->
+    <div class="col-lg-5">
+      <div class="option-card" id="sampleCard">
+        <div class="option-card-icon sample-icon">
+          <i class="bi bi-stars"></i>
+        </div>
+        <h5 class="option-card-title">Use Sample Data</h5>
+        <p class="option-card-desc">
+          Load 2 years of synthetic daily electricity consumption data with realistic
+          seasonal patterns, trend, and noise — ready to forecast instantly.
+        </p>
+        <ul class="option-card-meta">
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i>730 daily data points</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i>Yearly &amp; weekly seasonality</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i>No file needed</li>
+        </ul>
+        <button class="btn btn-accent w-100 mt-4" id="btnSample">
+          <i class="bi bi-stars me-2"></i>Load Sample Data
+        </button>
+      </div>
+    </div>
+
+    <!-- Upload Card -->
+    <div class="col-lg-5">
+      <div class="option-card" id="uploadCard">
+        <div class="option-card-icon upload-icon">
+          <i class="bi bi-cloud-upload-fill"></i>
+        </div>
+        <h5 class="option-card-title">Upload CSV File</h5>
+        <p class="option-card-desc">
+          Upload your own electricity consumption data. The file must contain a
+          <strong>date</strong> column and a <strong>consumption</strong> (or value) column.
+        </p>
+        <div class="upload-zone mt-3" id="uploadZone">
+          <i class="bi bi-cloud-upload fs-1 mb-2"></i>
+          <p class="mb-1 fw-semibold">Drag &amp; drop your CSV here</p>
+          <p class="small text-muted">or click to browse files</p>
+          <input type="file" id="fileInput" accept=".csv" class="d-none"/>
+        </div>
+        <div id="uploadFeedback" class="mt-2 small"></div>
+        <div class="hint-box mt-3">
+          <i class="bi bi-info-circle me-1"></i>
+          Required columns: <strong>date</strong> and <strong>consumption</strong> (or any numeric column)
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /row -->
+
+  <!-- Data Preview (shown after load) -->
+  <div id="dataPreview" class="data-preview-section d-none">
+    <div class="preview-header">
+      <i class="bi bi-check-circle-fill text-success me-2"></i>
+      <span id="previewMsg">Data loaded successfully</span>
+    </div>
+    <div class="row g-3 mt-2">
+      <div class="col-sm-4">
+        <div class="preview-stat">
+          <div class="preview-stat-label">Data Points</div>
+          <div class="preview-stat-value" id="previewPoints">—</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="preview-stat">
+          <div class="preview-stat-label">Start Date</div>
+          <div class="preview-stat-value" id="previewStart">—</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="preview-stat">
+          <div class="preview-stat-label">End Date</div>
+          <div class="preview-stat-value" id="previewEnd">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 text-center">
+      <button class="btn btn-accent btn-lg px-5" id="btnContinue">
+        Continue to Configure <i class="bi bi-arrow-right ms-2"></i>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /page-inner -->
+{% endblock %}
+
+{% block page_js %}
+<script src="/static/js/page_data.js"></script>
+{% endblock %}

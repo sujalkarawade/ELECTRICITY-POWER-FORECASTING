@@ -1,0 +1,76 @@
+/* ============================================================
+   page_configure.css — Step 2: Configure page styles
+   ============================================================ */
+
+/* ── Config Cards ───────────────────────────────────────── */
+.config-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.config-card-header {
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  padding: .85rem 1.25rem;
+  font-size: .875rem; font-weight: 600;
+}
+
+.config-card-body { padding: 1.25rem; }
+
+/* ── Parameter Groups ───────────────────────────────────── */
+.param-group { text-align: center; }
+
+.param-group-label {
+  display: block;
+  font-size: .72rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .06em; font-weight: 600;
+  margin-bottom: .4rem;
+}
+
+.param-input {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  text-align: center; font-weight: 700; font-size: 1.1rem;
+  padding: .5rem .4rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.param-input:focus {
+  background: var(--bg-elevated);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+  color: var(--text-primary); outline: none;
+}
+
+.param-group-hint {
+  display: block;
+  font-size: .7rem; color: var(--text-faint); margin-top: .3rem;
+}
+
+/* ── Horizon ────────────────────────────────────────────── */
+.horizon-badge {
+  background: var(--accent-glow);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  padding: .2em .8em;
+  font-size: .85rem; font-weight: 700;
+}
+
+.form-range { accent-color: var(--accent); }
+
+/* ── Auto-detect result text ────────────────────────────── */
+.auto-result-text {
+  font-size: .85rem; color: var(--success); font-weight: 600;
+}
+
+/* ── Param highlight animation ──────────────────────────── */
+@keyframes paramHighlight {
+  0%   { box-shadow: 0 0 0 3px rgba(78,154,241,.6); }
+  100% { box-shadow: none; }
+}
+.param-updated { animation: paramHighlight .8s ease forwards; }

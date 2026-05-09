@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="/static/css/page_results.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+
+  <div class="page-hero">
+    <i class="bi bi-graph-up-arrow page-hero-icon"></i>
+    <h2 class="page-title">Forecast Results</h2>
+    <p class="page-subtitle">SARIMA model fitted and forecast generated. Explore the chart, metrics, and download the results.</p>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-rulers"></i></div>
+        <div>
+          <div class="stat-label">MAE</div>
+          <div class="stat-value" id="statMAE">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-bullseye"></i></div>
+        <div>
+          <div class="stat-label">RMSE</div>
+          <div class="stat-value" id="statRMSE">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-bar-chart-line"></i></div>
+        <div>
+          <div class="stat-label">AIC</div>
+          <div class="stat-value" id="statAIC">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-calendar-range"></i></div>
+        <div>
+          <div class="stat-label">Data Points</div>
+          <div class="stat-value" id="statPoints">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="result-card mb-4">
+    <div class="result-card-header">
+      <span><i class="bi bi-activity me-2 text-accent"></i>Electricity Consumption &amp; Forecast</span>
+      <div class="chart-legend d-flex gap-3">
+        <span class="legend-item"><span class="legend-dot" style="background:#4e9af1"></span>Historical</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#f97316"></span>Forecast</span>
+        <span class="legend-item"><span class="legend-dot" style="background:rgba(249,115,22,.25);border:1px solid #f97316"></span>95% CI</span>
+      </div>
+    </div>
+    <div class="result-card-body chart-container">
+      <canvas id="forecastChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Table + Sidebar -->
+  <div class="row g-4">
+
+    <!-- Forecast Table -->
+    <div class="col-lg-8">
+      <div class="result-card">
+        <div class="result-card-header">
+          <i class="bi bi-table me-2 text-accent"></i>Forecast Values
+        </div>
+        <div class="result-card-body p-0">
+          <div class="table-responsive" style="max-height:340px;overflow-y:auto">
+            <table class="table table-dark table-hover table-sm mb-0">
+              <thead class="sticky-top">
+                <tr>
+                  <th>Date</th>
+                  <th>Forecast (kWh)</th>
+                  <th>Lower 95%</th>
+                  <th>Upper 95%</th>
+                </tr>
+              </thead>
+              <tbody id="forecastTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4 d-flex flex-column gap-4">
+
+      <!-- Model Summary -->
+      <div class="result-card">
+        <div class="result-card-header">
+          <i class="bi bi-info-circle me-2 text-accent"></i>Model Summary
+        </div>
+        <div class="result-card-body">
+          <div id="modelSummary" class="model-summary-list"></div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="result-card">
+        <div class="result-card-header">
+          <i class="bi bi-download me-2 text-accent"></i>Export &amp; Actions
+        </div>
+        <div class="result-card-body d-flex flex-column gap-2">
+          <button class="btn btn-accent w-100" id="btnDownload">
+            <i class="bi bi-file-earmark-spreadsheet me-2"></i>Download Forecast CSV
+          </button>
+          <a href="/configure" class="btn btn-outline-accent w-100">
+            <i class="bi bi-arrow-repeat me-2"></i>New Forecast
+          </a>
+          <a href="/" class="btn btn-outline-secondary w-100">
+            <i class="bi bi-database me-2"></i>Change Data Source
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /row -->
+
+</div><!-- /page-inner -->
+{% endblock %}
+
+{% block page_js %}
+<script src="/static/js/page_results.js"></script>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="/static/css/page_configure.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+
+  <div class="page-hero">
+    <i class="bi bi-sliders page-hero-icon"></i>
+    <h2 class="page-title">Configure SARIMA Model</h2>
+    <p class="page-subtitle">Set the model parameters and forecast horizon, or let the app find the best parameters automatically.</p>
+  </div>
+
+  <div class="row g-4 justify-content-center">
+
+    <!-- Auto-detect -->
+    <div class="col-lg-10">
+      <div class="config-card">
+        <div class="config-card-header">
+          <i class="bi bi-magic me-2 text-accent"></i>Auto-detect Parameters
+        </div>
+        <div class="config-card-body">
+          <p class="text-muted small mb-3">
+            Run a grid search over common parameter combinations and automatically
+            select the best SARIMA order by AIC score.
+          </p>
+          <div class="d-flex align-items-center gap-3 flex-wrap">
+            <button class="btn btn-outline-accent" id="btnAutoParams">
+              <i class="bi bi-magic me-2"></i>Find Best Parameters
+            </button>
+            <span class="auto-result-text" id="autoParamsResult"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Non-seasonal -->
+    <div class="col-lg-5">
+      <div class="config-card h-100">
+        <div class="config-card-header">
+          <i class="bi bi-graph-up me-2 text-accent"></i>Non-Seasonal Order (p, d, q)
+        </div>
+        <div class="config-card-body">
+          <p class="text-muted small mb-4">
+            Controls the autoregressive, differencing, and moving average components
+            of the non-seasonal part of the model.
+          </p>
+          <div class="row g-3">
+            <div class="col-4">
+              <div class="param-group">
+                <label class="param-group-label">p — AR order</label>
+                <input type="number" class="form-control param-input" id="paramP" value="1" min="0" max="5"/>
+                <span class="param-group-hint">Autoregressive</span>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="param-group">
+                <label class="param-group-label">d — Differencing</label>
+                <input type="number" class="form-control param-input" id="paramD" value="1" min="0" max="2"/>
+                <span class="param-group-hint">Integration</span>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="param-group">
+                <label class="param-group-label">q — MA order</label>
+                <input type="number" class="form-control param-input" id="paramQ" value="1" min="0" max="5"/>
+                <span class="param-group-hint">Moving Average</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seasonal -->
+    <div class="col-lg-5">
+      <div class="config-card h-100">
+        <div class="config-card-header">
+          <i class="bi bi-arrow-repeat me-2 text-accent"></i>Seasonal Order (P, D, Q, s)
+        </div>
+        <div class="config-card-body">
+          <p class="text-muted small mb-4">
+            Controls the seasonal components. Set <strong>s</strong> to the number of
+            periods in one season (e.g. 7 for weekly, 12 for monthly, 365 for yearly).
+          </p>
+          <div class="row g-3">
+            <div class="col-3">
+              <div class="param-group">
+                <label class="param-group-label">P</label>
+                <input type="number" class="form-control param-input" id="paramSP" value="1" min="0" max="3"/>
+                <span class="param-group-hint">Seasonal AR</span>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="param-group">
+                <label class="param-group-label">D</label>
+                <input type="number" class="form-control param-input" id="paramSD" value="1" min="0" max="2"/>
+                <span class="param-group-hint">Seasonal Diff</span>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="param-group">
+                <label class="param-group-label">Q</label>
+                <input type="number" class="form-control param-input" id="paramSQ" value="1" min="0" max="3"/>
+                <span class="param-group-hint">Seasonal MA</span>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="param-group">
+                <label class="param-group-label">s — Period</label>
+                <input type="number" class="form-control param-input" id="paramS" value="7" min="2" max="365"/>
+                <span class="param-group-hint">Season length</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forecast Horizon -->
+    <div class="col-lg-10">
+      <div class="config-card">
+        <div class="config-card-header">
+          <i class="bi bi-calendar-range me-2 text-accent"></i>Forecast Horizon
+        </div>
+        <div class="config-card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">How many days ahead to forecast</span>
+            <span class="horizon-badge" id="horizonLabel">30 days</span>
+          </div>
+          <input type="range" class="form-range" id="horizonSlider" min="1" max="365" value="30"/>
+          <div class="d-flex justify-content-between mt-1">
+            <span class="text-muted" style="font-size:.72rem">1 day</span>
+            <span class="text-muted" style="font-size:.72rem">365 days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="col-lg-10 text-center">
+      <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a href="/" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left me-2"></i>Back to Data
+        </a>
+        <button class="btn btn-success btn-lg px-5" id="btnForecast">
+          <i class="bi bi-graph-up-arrow me-2"></i>Run Forecast
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /row -->
+</div><!-- /page-inner -->
+{% endblock %}
+
+{% block page_js %}
+<script src="/static/js/page_configure.js"></script>
+{% endblock %}

@@ -1,0 +1,96 @@
+/* ============================================================
+   page_results.css — Step 3: Results page styles
+   ============================================================ */
+
+/* ── Stat Cards ─────────────────────────────────────────── */
+.stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  display: flex; align-items: center; gap: 1rem;
+  box-shadow: var(--shadow);
+  transition: border-color var(--transition), transform var(--transition);
+}
+.stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.stat-icon {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-glow);
+  border: 1px solid rgba(78,154,241,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: var(--accent); flex-shrink: 0;
+}
+
+.stat-label {
+  font-size: .72rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .07em; font-weight: 600;
+}
+.stat-value { font-size: 1.35rem; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+
+/* ── Result Cards ───────────────────────────────────────── */
+.result-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.result-card-header {
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  padding: .85rem 1.25rem;
+  font-size: .875rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: .5rem;
+}
+
+.result-card-body { padding: 1.25rem; }
+
+/* ── Chart ──────────────────────────────────────────────── */
+.chart-container {
+  position: relative;
+  min-height: 400px;
+  padding: 1rem;
+}
+#forecastChart { width: 100% !important; max-height: 420px; }
+
+/* ── Legend ─────────────────────────────────────────────── */
+.chart-legend { font-size: .78rem; color: var(--text-muted); }
+.legend-item  { display: flex; align-items: center; gap: .4rem; }
+.legend-dot   { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
+
+/* ── Table ──────────────────────────────────────────────── */
+.table-dark {
+  --bs-table-bg: var(--bg-surface);
+  --bs-table-hover-bg: var(--bg-hover);
+  --bs-table-border-color: var(--border);
+  font-size: .85rem;
+}
+.table-dark thead th {
+  background: var(--bg-elevated); color: var(--text-muted);
+  font-size: .75rem; text-transform: uppercase; letter-spacing: .06em;
+  border-bottom: 1px solid var(--border); padding: .65rem 1rem;
+}
+.table-dark td { padding: .55rem 1rem; color: var(--text-primary); border-color: var(--border); }
+
+/* ── Model Summary ──────────────────────────────────────── */
+.model-summary-list { display: flex; flex-direction: column; gap: .5rem; }
+
+.model-summary-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .45rem .6rem;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  font-size: .85rem;
+}
+.model-summary-key   { color: var(--text-muted); }
+.model-summary-value { font-weight: 600; color: var(--text-primary); }
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .chart-legend { display: none !important; }
+  .stat-value   { font-size: 1.1rem; }
+}

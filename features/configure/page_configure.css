@@ -16,9 +16,10 @@
   border-bottom: 1px solid var(--border);
   padding: .85rem 1.25rem;
   font-size: .875rem; font-weight: 600;
+  color: var(--text-primary);
 }
 
-.config-card-body { padding: 1.25rem; }
+.config-card-body { padding: 1.25rem; color: var(--text-primary); }
 
 /* ── Parameter Groups ───────────────────────────────────── */
 .param-group { text-align: center; }

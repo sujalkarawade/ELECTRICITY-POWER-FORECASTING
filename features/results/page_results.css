@@ -43,11 +43,12 @@
   border-bottom: 1px solid var(--border);
   padding: .85rem 1.25rem;
   font-size: .875rem; font-weight: 600;
+  color: var(--text-primary);
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: .5rem;
 }
 
-.result-card-body { padding: 1.25rem; }
+.result-card-body { padding: 1.25rem; color: var(--text-primary); }
 
 /* ── Chart ──────────────────────────────────────────────── */
 .chart-container {

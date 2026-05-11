@@ -202,6 +202,25 @@ body {
 }
 .spinner-border.text-accent { color: var(--accent) !important; }
 
+/* ── Bootstrap dark-theme overrides ─────────────────────── */
+/* Ensure Bootstrap utility classes respect our dark palette */
+.text-muted { color: var(--text-muted) !important; }
+p           { color: var(--text-primary); }
+strong      { color: var(--text-primary); }
+label       { color: var(--text-primary); }
+small       { color: var(--text-muted); }
+
+/* Card / form defaults */
+.form-control {
+  background-color: var(--bg-elevated);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+.form-control:focus {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 768px) {
   .page-inner { padding: 1.5rem 1rem 3rem; }

@@ -13,7 +13,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 warnings.filterwarnings("ignore")
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='features', static_folder='features')
 CORS(app)
 
 # ---------------------------------------------------------------------------
@@ -113,17 +113,17 @@ def compute_metrics(series: pd.Series, fitted_values: pd.Series) -> dict:
 
 @app.route("/")
 def index():
-    return render_template("page_data.html", active_page="data")
+    return render_template("data/page_data.html", active_page="data")
 
 
 @app.route("/configure")
 def configure():
-    return render_template("page_configure.html", active_page="configure")
+    return render_template("configure/page_configure.html", active_page="configure")
 
 
 @app.route("/results")
 def results():
-    return render_template("page_results.html", active_page="results")
+    return render_template("results/page_results.html", active_page="results")
 
 
 @app.route("/api/sample-data", methods=["GET"])
